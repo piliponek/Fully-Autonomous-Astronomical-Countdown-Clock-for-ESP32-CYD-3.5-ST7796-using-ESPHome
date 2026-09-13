@@ -57,7 +57,7 @@ esp32:
 
 wifi:
   ssid: "Ground_Station"
-  password: "wi-fi"
+  password: tigger191082
 
   manual_ip:
     static_ip: 192.168.1.103
@@ -153,7 +153,9 @@ display:
       int x0 = 390; 
       int y0 = 35;  
 
-      if (id(sun_astronomical).is_above_horizon()) {
+      bool jest_dzien = id(sun_astronomical).is_above_horizon();
+
+      if (jest_dzien) {
         it.filled_circle(x0, y0, 8, kolor_zolty);
         it.line(x0, y0 - 12, x0, y0 - 18, kolor_zolty); 
         it.line(x0, y0 + 12, x0, y0 + 18, kolor_zolty); 
@@ -175,32 +177,50 @@ display:
         it.print(240, 48, id(font_medium), kolor_jasnoniebieski, TextAlign::TOP_CENTER, "CZEKAM NA NTP...");
       }
 
-      // --- 3. SEKCJA ŚRODKOWA: LICZNIK ASTRONOMICZNY ---
-      it.print(240, 130, id(font_small), kolor_bialy, TextAlign::TOP_CENTER, "DO ZACHODU SLONCA:");
+      // --- 3. SEKCJA ŚRODKOWA: DYNAMICZNY LICZNIK ASTRONOMICZNY ---
+      if (jest_dzien) {
+        it.print(240, 130, id(font_small), kolor_bialy, TextAlign::TOP_CENTER, "DO ZACHODU SLONCA:");
 
-      auto zachod_czas = id(sun_astronomical).sunset(czas, 0.0);
-      if (zachod_czas.has_value() && czas.is_valid()) {
-        int32_t pozostalo_sekund = zachod_czas.value().timestamp - czas.timestamp;
-        
-        // Korekta dobowana następny dzień po wystąpieniu zachodu
-        if (pozostalo_sekund < 0) {
-          pozostalo_sekund += 86400;
+        auto zachod_czas = id(sun_astronomical).sunset(czas, 0.0);
+        if (zachod_czas.has_value() && czas.is_valid()) {
+          int32_t pozostalo_sekund = zachod_czas.value().timestamp - czas.timestamp;
+          if (pozostalo_sekund < 0) {
+            pozostalo_sekund += 86400;
+          }
+
+          int godziny = pozostalo_sekund / 3600;
+          int minuty = (pozostalo_sekund % 3600) / 60;
+          int sekundy = pozostalo_sekund % 60;
+          
+          it.printf(240, 162, id(font_large), kolor_pomaranczowy, TextAlign::TOP_CENTER, "%02d:%02d:%02d", godziny, minuty, sekundy);
+        } else {
+          it.print(240, 162, id(font_large), kolor_pomaranczowy, TextAlign::TOP_CENTER, "OBLICZANIE...");
         }
-
-        int godziny = pozostalo_sekund / 3600;
-        int minuty = (pozostalo_sekund % 3600) / 60;
-        int sekundy = pozostalo_sekund % 60;
-        
-        it.printf(240, 162, id(font_large), kolor_pomaranczowy, TextAlign::TOP_CENTER, "%02d:%02d:%02d", godziny, minuty, sekundy);
       } else {
-        it.print(240, 162, id(font_large), kolor_pomaranczowy, TextAlign::TOP_CENTER, "OBLICZANIE...");
+        it.print(240, 130, id(font_small), kolor_bialy, TextAlign::TOP_CENTER, "DO WSCHODU SLONCA:");
+
+        auto wschod_czas = id(sun_astronomical).sunrise(czas, 0.0);
+        if (wschod_czas.has_value() && czas.is_valid()) {
+          int32_t pozostalo_sekund = wschod_czas.value().timestamp - czas.timestamp;
+          if (pozostalo_sekund < 0) {
+            pozostalo_sekund += 86400;
+          }
+
+          int godziny = pozostalo_sekund / 3600;
+          int minuty = (pozostalo_sekund % 3600) / 60;
+          int sekundy = pozostalo_sekund % 60;
+          
+          it.printf(240, 162, id(font_large), kolor_pomaranczowy, TextAlign::TOP_CENTER, "%02d:%02d:%02d", godziny, minuty, sekundy);
+        } else {
+          it.print(240, 162, id(font_large), kolor_pomaranczowy, TextAlign::TOP_CENTER, "OBLICZANIE...");
+        }
       }
 
       // --- 4. SEKCJA DOLNA: METRYCZKA ---
       it.print(240, 240, id(font_small), kolor_szary, TextAlign::TOP_CENTER, "AUTOR: SP3PM op.Marcin");
-```
 
----
+
+
 
 ## 📡 Instrukcja implementacji w sieci lokalnej
 1. Otwórz swój **ESPHome Dashboard** lub edytor lokalny.
