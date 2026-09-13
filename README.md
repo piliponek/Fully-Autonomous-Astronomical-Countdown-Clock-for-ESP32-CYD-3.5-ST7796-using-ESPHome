@@ -54,7 +54,7 @@ esp32:
 
 wifi:
   ssid: "Ground_Station"
-  password: "tigger191082"
+  password: "wi-fi"
 
   manual_ip:
     static_ip: 192.168.1.103
@@ -92,8 +92,8 @@ time:
       - "pool.ntp.org"
 
 sun:
-  latitude: 52.8391
-  longitude: 15.8303
+  latitude: 52.0000
+  longitude: 15.0000
   id: sun_astronomical
 
 # --- Generowanie Czcionek Google Fonts ---
