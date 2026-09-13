@@ -1,3 +1,6 @@
+Title: Fully Autonomous Astronomical Countdown Clock for ESP32 CYD (3.5" ST7796) using ESPHomeHi! I wanted to share my complete, clean, and tested ESPHome configuration for the Sunton ESP32-035 (Cheap Yellow Display 3.5" without PSRAM).It acts as a standalone astronomical station that displays local time via NTP and a dynamic countdown timer (HH:MM:SS) showing exactly how much time is left until sunset.Features:Zero lag / no memory leaks on non-PSRAM boards using the modern mipi_spi platform.Vector graphics interface (rounded borders and section dividers).Smart celestial icon: displays a vector sun with 8 rays during the day and automatically flips to a crescent moon exactly at the minute of sunset.Hardcoded custom network logic with static IP and dual DNS to ensure immediate NTP synchronization.Feel free to use it and modify it for your coordinates!Created by: SP3PM op.Marcin (73!).
+
+
 # ☀️🌙 Autonomiczny Zegar Astronomiczny dla ESP32 CYD (3.5")
 
 Kompletny, zoptymalizowany i przetestowany plik konfiguracyjny systemu **ESPHome** dla popularnej płytki **Sunton ESP32-035 (Cheap Yellow Display 3.5" bez pamięci PSRAM)**. 
