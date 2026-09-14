@@ -57,7 +57,7 @@ esp32:
 
 wifi:
   ssid: "Ground_Station"
-  password: tigger191082
+  password: pasword
 
   manual_ip:
     static_ip: 192.168.1.103
